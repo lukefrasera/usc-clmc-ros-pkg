@@ -19,6 +19,7 @@
   
   <!-- <depend package="grasp_template"/> -->
   <depend package="tabletop_object_detector"/>
+  <depend package="sensor_msgs"/>
   <depend package="actionlib_msgs"/>
   <depend package="image_geometry"/>
   <depend package="usc_utilities"/>

@@ -18,6 +18,7 @@
 #include <limits>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <sensor_msgs/CameraInfo.h>
 #include <tf/transform_listener.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
