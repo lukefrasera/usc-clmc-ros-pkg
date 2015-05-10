@@ -22,8 +22,10 @@ rosbuild_genmsg()
 #rosbuild_gensrv()
 
 find_package(Eigen REQUIRED)
-include_directories(${EIGEN_INCLUDE_DIRS})
+find_package(PCL 1.6 REQUIRED)
+include_directories(${EIGEN_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
 add_definitions(${EIGEN_DEFINITIONS})
+link_directories(${PCL_LIBRARY_DIRS})
 
 rosbuild_add_library(${PROJECT_NAME}
   src/grasp_template.cpp
@@ -34,6 +36,7 @@ rosbuild_add_library(${PROJECT_NAME}
   src/dismatch_measure.cpp
   src/grasp_template_params.cpp
 )
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
   
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)

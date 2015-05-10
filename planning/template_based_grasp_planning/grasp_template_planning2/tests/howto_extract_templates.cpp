@@ -21,8 +21,8 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <usc_utilities/file_io.h>
 
-#include <grasp_template/heightmap_sampling.h>
-#include <grasp_template_planning/GraspLog.h>
+#include <grasp_template_planning2/heightmap_sampling.h>
+#include <grasp_template_planning2/GraspLog.h>
 
 using namespace std;
 using namespace ros;

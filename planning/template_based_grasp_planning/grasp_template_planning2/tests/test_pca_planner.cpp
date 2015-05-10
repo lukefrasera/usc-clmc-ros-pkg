@@ -11,10 +11,10 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <pcl/common/pca.h>
 
-#include <grasp_template_planning/object_detection_listener.h>
-#include <grasp_template_planning/pca_planning_pipe.h>
-#include <grasp_template_planning/pca_grasp_container.h>
-#include <grasp_template_planning/pca_planning_pipe.h>
+#include <grasp_template_planning2/object_detection_listener.h>
+#include <grasp_template_planning2/pca_planning_pipe.h>
+#include <grasp_template_planning2/pca_grasp_container.h>
+#include <grasp_template_planning2/pca_planning_pipe.h>
 
 using namespace std;
 using namespace pcl;
