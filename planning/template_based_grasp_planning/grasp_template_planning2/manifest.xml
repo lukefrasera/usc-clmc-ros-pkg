@@ -18,6 +18,7 @@
   <depend package="polled_camera"/>
   
   <!-- <depend package="grasp_template"/> -->
+  <depend package="table_object_detector"/>
   <depend package="actionlib_msgs"/>
   <depend package="image_geometry"/>
   <depend package="usc_utilities"/>
