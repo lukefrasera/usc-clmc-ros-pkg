@@ -52,7 +52,7 @@ const geometry_msgs::PoseStamped ObjectDetectionListener::getTableFrame() const
 
 void ObjectDetectionListener::connectToObjectDetector(ros::NodeHandle& n)
 {
-  cluster_client_ = n.serviceClient<tabletop_segmenter::TabletopSegmentation> ("/template_tabletop_segmentation");
+  cluster_client_ = n.serviceClient<tabletop_segmenter::TabletopSegmentation> ("/tabletop_segmentation");
 //  cluster_client_stereo_ = n.serviceClient<tabletop_segmenter::TabletopSegmentation> ("/template_tabletop_segmentation_stereo");
 //  stereo_exists_ = cluster_client_stereo_.exists();
 //
