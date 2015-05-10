@@ -74,9 +74,9 @@ rosbuild_add_executable(generate_grasp_library
 )
 target_link_libraries(generate_grasp_library ${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
-rosbuild_add_executable(uuid_test
-	tests/uuid_test.cpp
-)
+# rosbuild_add_executable(uuid_test
+# 	tests/uuid_test.cpp
+# )
 
 #rosbuild_add_executable(convex_hull
 #	tests/convex_hull.cpp
