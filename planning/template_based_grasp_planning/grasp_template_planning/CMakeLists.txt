@@ -22,8 +22,10 @@ rosbuild_genmsg()
 #rosbuild_gensrv()
 
 find_package(Eigen REQUIRED)
-include_directories(${EIGEN_INCLUDE_DIRS})
-add_definitions(${EIGEN_DEFINITIONS})
+find_package(PCL 1.6 REQUIRED)
+link_directories(${PCL_LIBRARY_DIRS})
+include_directories(${EIGEN_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+add_definitions(${EIGEN_DEFINITIONS}) 
 
 rosbuild_add_boost_directories()
 
@@ -41,43 +43,44 @@ rosbuild_add_library(${PROJECT_NAME}
   src/pca_grasp_container.cpp
   src/pca_planning_pipe.cpp
 )
+target_link_libraries(${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
 rosbuild_add_openmp_flags(${PROJECT_NAME})
 
 rosbuild_add_executable(user_demonstration_recorder
   src/user_demonstration_recorder.cpp
 )
-target_link_libraries(user_demonstration_recorder ${PROJECT_NAME})
+target_link_libraries(user_demonstration_recorder ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${PROJECT_NAME})
 
-rosbuild_add_executable(palm_marker
-  config/palm_marker.cpp
-)
-target_link_libraries(palm_marker ${PROJECT_NAME})
+# rosbuild_add_executable(palm_marker
+#   config/palm_marker.cpp
+# )
+# target_link_libraries(palm_marker ${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
-rosbuild_add_executable(generate_grasp_library
-  src/generate_grasp_library.cpp
-)
-target_link_libraries(generate_grasp_library ${PROJECT_NAME})
+# rosbuild_add_executable(generate_grasp_library
+#   src/generate_grasp_library.cpp
+# )
+# target_link_libraries(generate_grasp_library ${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
-rosbuild_add_executable(uuid_test
-	tests/uuid_test.cpp
-)
+# rosbuild_add_executable(uuid_test
+# 	tests/uuid_test.cpp
+# )
 
-#rosbuild_add_executable(convex_hull
-#	tests/convex_hull.cpp
-#)
+# #rosbuild_add_executable(convex_hull
+# #	tests/convex_hull.cpp
+# #)
 
-rosbuild_add_executable(test_pca_planner
-	tests/test_pca_planner.cpp
-)
-target_link_libraries(test_pca_planner ${PROJECT_NAME})
+# rosbuild_add_executable(test_pca_planner
+# 	tests/test_pca_planner.cpp
+# )
+# target_link_libraries(test_pca_planner ${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
-rosbuild_add_executable(howto_extract_templates
-	tests/howto_extract_templates.cpp
-)
-target_link_libraries(howto_extract_templates ${PROJECT_NAME})
+# rosbuild_add_executable(howto_extract_templates
+# 	tests/howto_extract_templates.cpp
+# )
+# target_link_libraries(howto_extract_templates ${PROJECT_NAME} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
-rosbuild_add_openmp_flags(uuid_test)
+# rosbuild_add_openmp_flags(uuid_test)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)

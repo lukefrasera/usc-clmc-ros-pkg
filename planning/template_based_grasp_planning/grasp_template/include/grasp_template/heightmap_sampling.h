@@ -24,6 +24,7 @@
 #include <pcl/point_cloud.h>
 //#include <sensor_msgs/PointCloud2.h>
 #include <visualization_msgs/Marker.h>
+#include <pcl/surface/convex_hull.h>
 
 #include <grasp_template/grasp_template_params.h>
 #include <grasp_template/height_value_extractor.h>
@@ -33,6 +34,7 @@
 namespace grasp_template
 {
 
+typedef pcl::ConvexHull < pcl::PointXYZ > ConvexHullPoint;
 struct HsIterator
 {
 

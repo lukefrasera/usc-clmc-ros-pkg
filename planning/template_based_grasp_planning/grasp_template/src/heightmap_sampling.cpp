@@ -15,7 +15,6 @@
 #include <limits>
 
 #include <ros/ros.h>
-#include <pcl/surface/convex_hull.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_broadcaster.h>
 #include <pcl/features/normal_3d.h>
@@ -456,11 +455,11 @@ bool HeightmapSampling::calculateNormalsFromHullSurface()
 
 bool HeightmapSampling::calculateConvexHull()
 {
-  ConvexHull < PointXYZ > cv;
-  cv.setInputCloud(point_cloud_);
+  // ConvexHull < PointXYZ > cv;
+  // cv.setInputCloud(point_cloud_);
   boost::shared_ptr < PointCloud<PointXYZ> > cv_points;
   cv_points.reset(new PointCloud<PointXYZ> ());
-  cv.reconstruct(*cv_points, convex_hull_vertices_);
+  // cv.reconstruct(*cv_points, convex_hull_vertices_);
 
   convex_hull_points_ = cv_points;
 
