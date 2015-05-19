@@ -1,17 +1,17 @@
 <launch>
   <arg name="debug" default="false" />
   
-  <arg name="grasp_library_file" value="$(find grasp_template_planning)/data/grasp_library.bag" /> 
-  <arg name="grasp_demonstrations_path" value="$(find grasp_template_planning)/data/grasp_demonstrations_data/" />
-  <arg name="library_negatives" value="$(find grasp_template_planning)/data/library_negatives/" />
-  <arg name="library_positives" value="$(find grasp_template_planning)/data/library_positives/" />
-  <arg name="log_data" value="$(find grasp_template_planning)/data/log_data/" />
+  <arg name="grasp_library_file" value="$(find grasp_template_planning2)/data/grasp_library.bag" /> 
+  <arg name="grasp_demonstrations_path" value="$(find grasp_template_planning2)/data/grasp_demonstrations_data/" />
+  <arg name="library_negatives" value="$(find grasp_template_planning2)/data/library_negatives/" />
+  <arg name="library_positives" value="$(find grasp_template_planning2)/data/library_positives/" />
+  <arg name="log_data" value="$(find grasp_template_planning2)/data/log_data/" />
 	
   <include file="$(find tabletop_segmenter)/launch/tabletop_segmenter.launch">
-	<arg name="tabletop_segmentation_points_in" value="/camera/depth/points" />
-    <arg name="tabletop_segmentation_depth_in" value="/camera/depth/image_raw" />
-    <arg name="tabletop_segmentation_rgb_in" value="/camera/rgb/image_color" />
-    <arg name="tabletop_segmentation_cam_info" value="/camera/depth/camera_info" />
+	<arg name="tabletop_segmentation_points_in" value="/head_mount_kinect/depth_registered/points" />
+    <arg name="tabletop_segmentation_depth_in" value="/head_mount_kinect/depth_registered/image_raw" />
+    <arg name="tabletop_segmentation_rgb_in" value="/head_mount_kinect/rgb/image_color" />
+    <arg name="tabletop_segmentation_cam_info" value="/head_mount_kinect/depth_registered/camera_info" />
 	<arg name="tabletop_segmentation_srv" value="template_tabletop_segmentation"/>
 	<arg name="tabletop_segmentation_markers" value="template_tabletop_segmentation_markers"/>
   </include>
