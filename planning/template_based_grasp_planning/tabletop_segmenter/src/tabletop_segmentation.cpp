@@ -208,9 +208,9 @@ public:
     priv_nh_.param<int>("inlier_threshold", inlier_threshold_, 300);
     priv_nh_.param<double>("plane_detection_voxel_size", plane_detection_voxel_size_, 0.01);
     priv_nh_.param<double>("clustering_voxel_size", clustering_voxel_size_, 0.003);
-    priv_nh_.param<double>("z_filter_min", z_filter_min_, 0.75);
+    priv_nh_.param<double>("z_filter_min", z_filter_min_, 0.4);
     priv_nh_.param<double>("z_filter_max", z_filter_max_, 1.0);
-    priv_nh_.param<double>("y_filter_min", y_filter_min_, 0.50);
+    priv_nh_.param<double>("y_filter_min", y_filter_min_, -0.50);
     priv_nh_.param<double>("y_filter_max", y_filter_max_, 1.50);
     priv_nh_.param<double>("x_filter_min", x_filter_min_, -1.0);
     priv_nh_.param<double>("x_filter_max", x_filter_max_, 1.0);
@@ -220,7 +220,6 @@ public:
     priv_nh_.param<int>("min_cluster_size", min_cluster_size_, 300);
     priv_nh_.param<std::string>("processing_frame", processing_frame_, "");
     priv_nh_.param<double>("up_direction", up_direction_, -1.0);
-    printf("CompleteThe constructor\n");
   }
 
   //! Empty stub
@@ -701,9 +700,9 @@ void TabletopSegmentor::processCloud(const sensor_msgs::PointCloud2 &cloud,
         //cloud.header.stamp
         sensor_msgs::PointCloud2 local_cloud = cloud;
         local_cloud.header.stamp = ros::Time(0);
-	ROS_VERIFY(listener_.waitForTransform("/BASE", cloud.header.frame_id, cloud.header.stamp, ros::Duration(3.0)));
+	ROS_VERIFY(listener_.waitForTransform("/base_link", cloud.header.frame_id, cloud.header.stamp, ros::Duration(3.0)));
 	//ROS_VERIFY(listener_.waitForTransform("/BASE", local_cloud.header.frame_id, local_cloud.header.stamp, ros::Duration(3.0)));
-	ROS_VERIFY(pcl_ros::transformPointCloud("/BASE", local_cloud, transform_cloud, listener_));
+	ROS_VERIFY(pcl_ros::transformPointCloud("/base_link", local_cloud, transform_cloud, listener_));
 
 	// PCL objects
 	boost::shared_ptr<pcl::search::Search<Point> > normals_tree_, clusters_tree_;
@@ -749,10 +748,11 @@ void TabletopSegmentor::processCloud(const sensor_msgs::PointCloud2 &cloud,
 	pcl_cluster_.setMinClusterSize (min_cluster_size_);
 	pcl_cluster_.setSearchMethod (clusters_tree_);
 
-	// Step 1 : Filter, remove NaNs and downsample
-	pcl::PointCloud<Point>::Ptr cloud_ptr(new pcl::PointCloud<Point> ());
-	//pcl::fromROSMsg (cloud, *cloud_ptr); // Changing cloud to /Base transformed cloud
-	pcl::fromROSMsg (transform_cloud, *cloud_ptr); // Changing cloud to /Base transformed cloud
+  // Step 1 : Filter, remove NaNs and downsample
+  pcl::PointCloud<Point>::Ptr cloud_ptr(new pcl::PointCloud<Point> ());
+  //pcl::fromROSMsg (cloud, *cloud_ptr); // Changing cloud to /Base transformed cloud
+  pcl::fromROSMsg (transform_cloud, *cloud_ptr); // Changing cloud to /Base transformed cloud
+  ROS_INFO("UN-Filtered Cloud has %ld points", (long int)cloud_ptr->points.size());
 
 	pcl::PointCloud<Point>::Ptr cloud_filtered_ptr_x(new pcl::PointCloud<Point> ());
 	pcl::PointCloud<Point>::Ptr cloud_filtered_ptr_y(new pcl::PointCloud<Point> ());
@@ -761,18 +761,21 @@ void TabletopSegmentor::processCloud(const sensor_msgs::PointCloud2 &cloud,
 	pass_.setInputCloud (cloud_ptr);
 	pass_.filter (*cloud_filtered_ptr_z);
 
+  ROS_INFO("Z-Filtered Cloud has %ld points", (long int)cloud_filtered_ptr_z->points.size());
 	//filtering x
 	pass_.setFilterFieldName ("x");
 	pass_.setFilterLimits (x_filter_min_, x_filter_max_);
 	pass_.setInputCloud (cloud_filtered_ptr_z);
 	pass_.filter (*cloud_filtered_ptr_x);
 
+  ROS_INFO("X-Filtered Cloud has %ld points", (long int)cloud_filtered_ptr_x->points.size());
 	//filtering y
 	pass_.setFilterFieldName ("y");
 	pass_.setFilterLimits (y_filter_min_, y_filter_max_);
 	pass_.setInputCloud (cloud_filtered_ptr_x);
 	pass_.filter (*cloud_filtered_ptr_y);
 
+  ROS_INFO("Y-Filtered Cloud has %ld points", (long int)cloud_filtered_ptr_y->points.size());
 	ROS_INFO("Step 1 done");
 	if (cloud_filtered_ptr_y->points.size() < (unsigned int)min_cluster_size_)
 	{
@@ -793,7 +796,7 @@ void TabletopSegmentor::processCloud(const sensor_msgs::PointCloud2 &cloud,
 
 	ROS_INFO("Transforming PointCloud back into camera frame");
 	// transforming back to original frame
-	ROS_VERIFY(listener_.waitForTransform(cloud.header.frame_id, "/BASE", cloud.header.stamp, ros::Duration(3.0)));
+	ROS_VERIFY(listener_.waitForTransform(cloud.header.frame_id, "/base_link", cloud.header.stamp, ros::Duration(3.0)));
 	ROS_VERIFY(pcl_ros::transformPointCloud(cloud.header.frame_id, *cloud_downsampled_ptr, *cloud_downsampled_ptr,listener_));
 	ROS_VERIFY(pcl_ros::transformPointCloud(cloud.header.frame_id, *cloud_filtered_ptr_y, *cloud_filtered_ptr_y,listener_));
 	ROS_INFO("Publishing Downsampled cloud");

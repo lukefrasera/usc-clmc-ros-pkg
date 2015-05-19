@@ -23,7 +23,7 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <geometry_msgs/Pose.h>
-#include <tabletop_object_detector/TabletopSegmentation.h>
+#include <tabletop_segmenter/TabletopSegmentation.h>
 
 namespace grasp_template_planning
 {
@@ -48,7 +48,7 @@ private:
   bool stereo_exists_;
   ros::ServiceClient cluster_client_stereo_;
   geometry_msgs::PoseStamped table_frame_;
-  tabletop_object_detector::TabletopSegmentation tod_communication_, tod_communication_stereo_;
+  tabletop_segmenter::TabletopSegmentation tod_communication_, tod_communication_stereo_;
   pcl::PointCloud<pcl::PointXYZ> object_cluster_; //closest object
   pcl::PointCloud<pcl::PointXYZRGB> object_cluster_colored_; //closest object
 

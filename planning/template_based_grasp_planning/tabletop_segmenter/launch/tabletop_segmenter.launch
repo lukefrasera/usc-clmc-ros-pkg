@@ -6,7 +6,7 @@
   <arg name="tabletop_segmentation_rgb_in" default="/camera/rgb/image_color" />
   <arg name="tabletop_segmentation_cam_info" default="/camera/depth/camera_info" />
   <arg name="tabletop_segmentation_stereo_cam_info" default="/Honeybee/left/camera_info" />
-  <arg name="tabletop_segmentation_clustering_voxel_size" default="0.003" />
+  <arg name="tabletop_segmentation_clustering_voxel_size" default="0.005" />
   <arg name="tabletop_segmentation_srv" default="tabletop_segmentation"/>
   <arg name="tabletop_segmentation_markers" default="tabletop_segmentation_markers"/>
   <arg name="merge" default="false"/>

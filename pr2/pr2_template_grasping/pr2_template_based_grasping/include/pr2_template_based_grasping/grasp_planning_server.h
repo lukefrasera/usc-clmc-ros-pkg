@@ -22,9 +22,9 @@
 #include <actionlib/server/simple_action_server.h>
 #include <grasp_template_planning/visualization.h>
 #include <grasp_template_planning/planning_pipeline.h>
-#include <object_manipulation_msgs/GraspPlanning.h>
-#include <object_manipulation_msgs/GraspPlanningAction.h>
-#include <object_manipulation_msgs/GraspPlanningActionGoal.h>
+#include <manipulation_msgs/GraspPlanning.h>
+#include <manipulation_msgs/GraspPlanningAction.h>
+#include <manipulation_msgs/GraspPlanningActionGoal.h>
 #include <grasp_template_planning/template_matching.h>
 #include <grasp_template_planning/object_detection_listener.h>
 #include <pr2_template_based_grasping/PlanningVisualization.h>
@@ -32,6 +32,7 @@
 #include <pr2_template_based_grasping/PlanningSummary.h>
 #include <pr2_template_based_grasping/interactive_candidate_filter.h>
 #include <grasp_template_planning/image_listener.h>
+#include <geometry_msgs/Pose.h>
 
 namespace pr2_template_based_grasping
 {
@@ -43,8 +44,8 @@ public:
       const std::string& lib_path, const std::string& failure_path,
       const std::string& success_path, const std::string& log_data_path);
 
-  bool plan(object_manipulation_msgs::GraspPlanning::Request &req,
-            object_manipulation_msgs::GraspPlanning::Response &res);
+  bool plan(manipulation_msgs::GraspPlanning::Request &req,
+            manipulation_msgs::GraspPlanning::Response &res);
   bool giveFeedback(PlanningFeedback::Request& req, PlanningFeedback::Response& res);
   bool visualize(PlanningVisualization::Request& req, PlanningVisualization::Response& res);
   bool getLog(PlanningSummary::Request& req, PlanningSummary::Response& res);
@@ -73,11 +74,11 @@ private:
   static const unsigned int PC_NUM_GRASP_OUTPUT = 100;
 
   void convertGrasps(const grasp_template_planning::TemplateMatching& pool,
-                     std::vector<object_manipulation_msgs::Grasp>& goals);
+                     std::vector<manipulation_msgs::Grasp>& goals);
   bool updateGraspLibrary();
   int getGraspResultIndex(unsigned int pool_index) const;
   unsigned int getPoolKey() const;
-  unsigned int getPoolKey(const object_manipulation_msgs::Grasp& attempt) const;
+  unsigned int getPoolKey(const manipulation_msgs::Grasp& attempt) const;
 };
 
 } //namespace

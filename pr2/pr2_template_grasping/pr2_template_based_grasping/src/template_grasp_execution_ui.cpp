@@ -24,7 +24,7 @@
 
 //// TEMPLATE GRASPING CODE BEGIN: code for planning service and related messages ////
 #include <pr2_template_based_grasping/PlanningFeedback.h>
-#include <object_manipulation_msgs/GraspPlanning.h>
+#include <manipulation_msgs/GraspPlanning.h>
 //// TEMPLATE GRASPING CODE END: code for planning service and related messages ////
 
 using namespace std;
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   }
   if (!nh.ok())
     return 0;
-  grasp_planning_client = nh.serviceClient<object_manipulation_msgs::GraspPlanning> (
+  grasp_planning_client = nh.serviceClient<manipulation_msgs::GraspPlanning> (
       GRASP_PLANNING_SERVICE_NAME, true);
 
   //wait for grasp planning feedback client
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
 
 //// TEMPLATE GRASPING CODE BEGIN: request grasps for detected point-cloud cluster ////
       ROS_INFO("Calling template grasp planner");
-      object_manipulation_msgs::GraspPlanning grasp_planning_call;
+      manipulation_msgs::GraspPlanning grasp_planning_call;
       grasp_planning_call.request.target.cluster = detection_call.response.detection.clusters.at(0);
       if (!grasp_planning_client.call(grasp_planning_call))
       {

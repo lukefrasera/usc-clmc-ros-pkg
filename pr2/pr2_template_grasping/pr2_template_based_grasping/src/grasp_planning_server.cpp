@@ -56,8 +56,8 @@ GraspPlanningServer::GraspPlanningServer(ros::NodeHandle& nh, const string& demo
   ROS_INFO("Template grasp planner logging service is up.");
 }
 
-bool GraspPlanningServer::plan(object_manipulation_msgs::GraspPlanning::Request &req,
-    object_manipulation_msgs::GraspPlanning::Response &res)
+bool GraspPlanningServer::plan(manipulation_msgs::GraspPlanning::Request &req,
+    manipulation_msgs::GraspPlanning::Response &res)
 {
   ros::Time t_start = ros::Time::now();
   boost::mutex::scoped_lock lock(mutex_);
@@ -125,7 +125,7 @@ bool GraspPlanningServer::plan(object_manipulation_msgs::GraspPlanning::Request 
 }
 
 void GraspPlanningServer::convertGrasps(const TemplateMatching& pool,
-    vector<object_manipulation_msgs::Grasp>& grasps)
+    vector<manipulation_msgs::Grasp>& grasps)
 {
   tf::StampedTransform led_to_wrist;
   getTransform(led_to_wrist, frameGripper(), "r_wrist_roll_link");
@@ -152,8 +152,8 @@ void GraspPlanningServer::convertGrasps(const TemplateMatching& pool,
     tf::poseMsgToTF(led_pose, led_to_base);
     tf::poseTFToMsg(led_to_base * led_to_wrist, wrist_pose);
 
-    grasps.push_back(object_manipulation_msgs::Grasp());
-    grasps.back().grasp_pose = wrist_pose;
+    grasps.push_back(manipulation_msgs::Grasp());
+    grasps.back().grasp_pose.pose = wrist_pose;
 
     ///DEBUG///
 //    for(unsigned int i = 0; i < grasp_planning_call.response.grasps.size(); ++i)
@@ -199,10 +199,10 @@ void GraspPlanningServer::convertGrasps(const TemplateMatching& pool,
     g_posture.position[3] = 0;
     grasps.back().grasp_posture = g_posture;
 
-    grasps.back().success_probability = 1 - static_cast<double> (i) / num_grasps;
+    grasps.back().grasp_quality = 1 - static_cast<double> (i) / num_grasps;
 
-    grasps.back().desired_approach_distance = 0.1;
-    grasps.back().min_approach_distance = 0.05;
+    grasps.back().approach.desired_distance = 0.1;
+    grasps.back().approach.min_distance = 0.05;
 
     string mp_key;
     {
@@ -225,12 +225,12 @@ void GraspPlanningServer::convertGrasps(const TemplateMatching& pool,
 
 unsigned int GraspPlanningServer::getPoolKey() const
 {
-	const object_manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.grasp;
+	const manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.grasp;
 
 	return getPoolKey(attempt);
 }
 
-unsigned int GraspPlanningServer::getPoolKey(const object_manipulation_msgs::Grasp& attempt) const
+unsigned int GraspPlanningServer::getPoolKey(const manipulation_msgs::Grasp& attempt) const
 {
 	string mp_key;
 	{
@@ -334,7 +334,7 @@ bool GraspPlanningServer::giveFeedback(PlanningFeedback::Request& req, PlanningF
 
   for(unsigned int j = 0; j < grasp_feedback_.feedback.attempted_grasps.size(); ++j)
   {
-		const object_manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[j];
+		const manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[j];
 		string mp_key;
 		{
 		  stringstream ss;
@@ -361,7 +361,7 @@ bool GraspPlanningServer::giveFeedback(PlanningFeedback::Request& req, PlanningF
   if(grasp_feedback_.feedback.attempted_grasp_results.size() > 0 &&
 		  vis_id < grasp_feedback_.feedback.attempted_grasp_results.size())
   {
-	const object_manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[vis_id];
+	const manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[vis_id];
 	unsigned int pool_vis_id = getPoolKey(attempt);
 
 	if(grasp_pool_ != NULL && pool_vis_id < grasp_pool_->size())
@@ -398,11 +398,11 @@ bool GraspPlanningServer::visualize(PlanningVisualization::Request& req,
 	assert(evaluation_mask_[r] == 1);
     const object_manipulation_msgs::GraspResult& attempt_results =
         grasp_feedback_.feedback.attempted_grasp_results[result_index];
-    const object_manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[result_index];
+    const manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[result_index];
     {
       PoseStamped ps;
       ps.header = attempt.grasp_posture.header;
-      ps.pose = attempt.grasp_pose;
+      ps.pose = attempt.grasp_pose.pose;
       attempt_pub_.publish(ps);
     }
     ROS_INFO_STREAM("Visualizing grasp with rank " << r << " and result code " << attempt_results.result_code);
@@ -439,7 +439,7 @@ int GraspPlanningServer::getGraspResultIndex(unsigned int pool_index) const
 
   for (unsigned int i = 0; i < grasp_feedback_.feedback.attempted_grasps.size(); i++)
   {
-    const object_manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[i];
+    const manipulation_msgs::Grasp& attempt = grasp_feedback_.feedback.attempted_grasps[i];
     string key;
     {
       stringstream ss;
