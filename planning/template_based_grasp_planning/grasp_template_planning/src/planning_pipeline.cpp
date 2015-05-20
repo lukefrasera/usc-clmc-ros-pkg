@@ -557,6 +557,7 @@ void PlanningPipeline::planGrasps(boost::shared_ptr<TemplateMatching>& pool) con
   ////DEBUG CODE
 
     *lib_grasps = *(library_->getAnalysisMsgs());
+    ROS_INFO_STREAM("PlanningPipeline::planGrasps - lib_grasps size:=%d", lib_grasp->size());
     for (unsigned int i = 0; i < lib_grasps->size(); i++)
     {
       lib_failures->push_back(vector<GraspAnalysis, Eigen::aligned_allocator<GraspAnalysis> > ());
